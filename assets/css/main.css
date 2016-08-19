@@ -3807,9 +3807,11 @@
 /************
 OVERRIDES
 ************/
-
+.contact-p {
+	margin-bottom: 5px;
+}
 .tetris {
-	width: 175px;
+	width: 100%;
 	height: auto;
 }
 .button.live {
@@ -3819,4 +3821,19 @@ OVERRIDES
 }
 .long-p {
 	margin-bottom: 6px;
+}
+
+.icon.major.style3 {
+	width:  72%;
+}
+@media screen and  (max-width: 980px) {
+	.icon.major.style3 {
+		width: 192px;
+	}
+}
+
+@media screen and  (max-width: 736px) {
+	.icon.major.style3 {
+		width: 137px;
+	}
 }
