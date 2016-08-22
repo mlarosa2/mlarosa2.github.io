@@ -154,7 +154,7 @@
 	Game.prototype.renderMainMenu = function (ctx) {
 	  if (this.menu !== "main") return;
 	  ctx.beginPath();
-	  ctx.rect(50, 200, 200, 100 );
+	  ctx.rect(50, 200, 200, 150);
 	  ctx.fillStyle = 'white';
 	  ctx.fill();
 	  ctx.lineWidth = 2;
@@ -168,6 +168,8 @@
 	  ctx.font = '15px sans-serif';
 	  ctx.fillStyle = 'black';
 	  ctx.fillText('Press "s" to start.', 93, 275);
+	  ctx.fillText('wasd - direction', 95, 300);
+	  ctx.fillText('q/e - rotate left/right', 85, 325);
 	};
 	
 	Game.prototype.removeMainMenu = function () {
@@ -206,9 +208,9 @@
 	  let piece = this.nextPiece.shift();
 	  this.nextPiece.push(this.randomPiece());
 	  if (this.menu === 'main') {
-	    document.getElementById('next-piece').innerHTML = `<img id="next-image" style="opacity:0" src="./img/${this.nextPiece[0].name}.png">`;
+	    document.getElementById('next-piece').innerHTML = `<img id="next-image" style="opacity:0" src="./tetris_assets/img/${this.nextPiece[0].name}.png">`;
 	  } else {
-	    document.getElementById('next-piece').innerHTML = `<img id="next-image" src="./img/${this.nextPiece[0].name}.png">`;
+	    document.getElementById('next-piece').innerHTML = `<img id="next-image" src="./tetris_assets/img/${this.nextPiece[0].name}.png">`;
 	  }
 	  this.pieces.push(piece);
 	};
@@ -218,7 +220,7 @@
 	};
 	
 	Game.prototype.hideNextPiece = function () {
-	  document.getElementById('next-piece').innerHTML = `<img id="next-image" style="opacity:0" src="./img/${this.nextPiece[0].name}.png">`
+	  document.getElementById('next-piece').innerHTML = `<img id="next-image" style="opacity:0" src="./tetris_assets/img/${this.nextPiece[0].name}.png">`
 	};
 	
 	Game.prototype.draw = function (ctx) {
