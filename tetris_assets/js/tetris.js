@@ -10,16 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
   new GameView(game, ctx).start();
 });
 
-window.replay = function () {
-  const canvas  = document.getElementById('canvas');
-  canvas.width  = Game.DIM_X;
-  canvas.height = Game.DIM_Y;
-  const ctx     = canvas.getContext("2d");
-  const game    = new Game();
-  new GameView(game, ctx).start();
-};
-
-
 let mute  = document.getElementById("volume");
 let audio = document.getElementById("theme");
 
