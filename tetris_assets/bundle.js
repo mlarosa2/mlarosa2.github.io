@@ -61,11 +61,11 @@
 	
 	mute.addEventListener('click', function () {
 	  if (!audio.paused) {
-	    mute.innerHTML = '<span class="fa-stack"><i class="fa fa-music fa-stack-1x"></i><i class="fa fa-ban fa-stack-1x"></i></span>&nbsp;&nbsp;Unmute</span>'
+	    mute.innerHTML = '<span class="fa-stack"><i class="fa fa-music fa-stack-1x"></i><i class="fa fa-ban fa-stack-1x"></i></span> Unmute</span>'
 	    mute.className = 'muted'
 	    audio.pause();
 	  } else {
-	    mute.innerHTML = '<i class="fa fa-music"></i>&nbsp;&nbsp;Mute';
+	    mute.innerHTML = '<i class="fa fa-music"></i> Mute';
 	    mute.className = '';
 	    audio.play();
 	  }
