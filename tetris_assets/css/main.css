@@ -45,7 +45,7 @@ main:after {
   width: 150px;
   border: 5px solid transparent;
   background: #FAFAFA;
-  border-image: url("../tetris_assets/img/brick-border.png") 48% repeat;
+  border-image: url("../../tetris_assets/img/brick-border.png") 48% repeat;
 }
 .next-piece {
   text-align: center;
