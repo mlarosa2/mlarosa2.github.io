@@ -6,7 +6,6 @@ const RightL = require('./pieces/right_l');
 const LeftZ  = require('./pieces/left_z');
 const RightZ = require('./pieces/right_z');
 const Tee    = require('./pieces/t');
-const Firebase = require('firebase');
 
 const NUM_PIECES = 7
 
@@ -18,7 +17,6 @@ const Game = function () {
   this.nextPiece = [];
   this.score     = 0;
   this.menu      = 'main';
-  this.sentToDB  = false;
 };
 
 Game.BG_COLOR         = '#FAFAFA';
@@ -186,17 +184,42 @@ Game.prototype.movePiece = function (delta) {
 };
 
 Game.prototype.checkForGameOver = function () {
-  if (this.board.isOver()) {
+  if (this.board.isOver() && this.score >= this.lowestHighScore()) {
+    this.menu = 'hi-score';
+    this.renderHiScoreModal();
+  } else if (this.board.isOver()) {
     this.menu = 'over';
-    if (!this.sentToDB) {
-      this.sentToDB = true;
-      let myFireBase = new Firebase("https://tetrisjs-9132d.firebaseio.com");
-      myFireBase.set({
-        name : "mark",
-        score : this.score
-      });
-    }
   }
+};
+
+Game.prototype.renderHiScoreModal = function () {
+  let menu = document.getElementById("enter-score");
+  let submitHi = document.getElementById("submit");
+  menu.className = "";
+  submitHi.addEventListener('click', function (e) {
+    e.preventDefault();
+    let initials = document.getElementById("initials");
+    if (initials.value.length > 3) {
+      initials = initials.slice(0, 3).toUpperCase();
+    }
+  });
+};
+
+Game.prototype.lowestHighScore = function () {
+  const dbRefObject = firebase.database().ref();
+  const allScores = [];
+
+  dbRefObject.on("value", function(snapshot) {
+    let scores = snapshot.val().scores;
+    for (let score in scores) {
+      if (scores.hasOwnProperty(score)) {
+        let initials = Object.keys(scores[score])[0];
+        allScores.push(scores[score][initials]);
+      }
+    }
+  });
+
+  return Math.min.apply(Math, allScores);
 };
 
 Game.prototype.reset = function (ctx) {

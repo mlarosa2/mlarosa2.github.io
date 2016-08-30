@@ -10,6 +10,14 @@
     <link rel="stylesheet" href="./tetris_assets/css/main.css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
+    <div class="hide" id="enter-score">
+      <h1>Congrats! You got a high score!</h1>
+      <p>Please enter your initials below.</p>
+      <form>
+        <input type="text" id="initials">
+        <input type="submit" id="submit">
+      </form>
+    </div>
     <main>
       <img src="./tetris_assets/img/bg.png" class="bg">
       <canvas id="canvas" width="300" height="600" style="border: 1px solid black"></canvas>
@@ -22,7 +30,7 @@
         <span id="score">0</span>
       </div>
       <div class="high-scores">
-        <h3>Top</h3>
+        <h3>TOP</h3>
         <ul id="hi-list"></ul>
       </div>
       <p id="volume"><i class="fa fa-music"></i> Mute</p>
@@ -31,6 +39,7 @@
       <source src="./tetris_assets/files/theme.mp3" type="audio/mpeg">
     </audio>
     <script>
+    // Initialize Google Analytics
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
