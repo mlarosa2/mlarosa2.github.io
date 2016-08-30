@@ -242,7 +242,7 @@
 	  var scoreTag = document.getElementById('score');
 	  scoreTag.innerHTML = this.score;
 	  this.increaseFallRate();
-	  firebase.database().ref('hi-scores').push({ name: "whoever", score: this.score });
+	  firebase.database().push({ name: "whoever", score: this.score });
 	};
 	
 	Game.prototype.increaseFallRate = function () {
@@ -1776,7 +1776,7 @@
 	  this.bindKeyHandlers();
 	  this.lastTime = 0;
 	  var highScore = document.getElementById("hi-list");
-	  var data = firebase.database().ref('hi-scores');
+	  var data = firebase.database();
 	  highScore.innerHTML = data;
 	  requestAnimationFrame(this.animate.bind(this));
 	};

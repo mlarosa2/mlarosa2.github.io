@@ -161,7 +161,7 @@ Game.prototype.setScore = function () {
   let scoreTag       = document.getElementById('score');
   scoreTag.innerHTML = this.score;
   this.increaseFallRate();
-  firebase.database().ref('hi-scores').push({ name: "whoever", score: this.score });
+  firebase.database().push({ name: "whoever", score: this.score });
 };
 
 Game.prototype.increaseFallRate = function () {
