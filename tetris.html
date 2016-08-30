@@ -20,6 +20,10 @@
         <h3>SCOЯE</h3>
         <span id="score">0</span>
       </div>
+      <div class="high-scores">
+        <h3>Top</h3>
+        <ul id="hi-list"></ul>
+      </div>
       <p id="volume"><i class="fa fa-music"></i> Mute</p>
     </main>
     <audio id="theme" loop autoplay>
@@ -34,6 +38,19 @@
       ga('create', 'UA-83191151-1', 'auto');
       ga('send', 'pageview');
     </script>
+
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAeX166-2Pw6Fn_WKAwN4NJPQL1CPTyFSg",
+        authDomain: "tetrisjs-9132d.firebaseapp.com",
+        databaseURL: "https://tetrisjs-9132d.firebaseio.com",
+        storageBucket: "",
+      };
+      firebase.initializeApp(config);
+    </script>
+
     <script type="text/javascript" src="./tetris_assets/js/vendor/keymaster.js"></script>
     <script type="text/javascript" src="./tetris_assets/bundle.js"></script>
   </body>
