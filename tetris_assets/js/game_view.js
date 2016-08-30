@@ -33,9 +33,6 @@ GameView.prototype.replay = function () {
 GameView.prototype.start = function () {
   this.bindKeyHandlers();
   this.lastTime = 0;
-  let highScore = document.getElementById("hi-list");
-  let data = firebase.database();
-  highScore.innerHTML = data;
   requestAnimationFrame(this.animate.bind(this));
 };
 

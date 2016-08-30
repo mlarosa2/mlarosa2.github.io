@@ -6,6 +6,7 @@ const RightL = require('./pieces/right_l');
 const LeftZ  = require('./pieces/left_z');
 const RightZ = require('./pieces/right_z');
 const Tee    = require('./pieces/t');
+const Firebase = require('firebase');
 
 const NUM_PIECES = 7
 
@@ -17,6 +18,7 @@ const Game = function () {
   this.nextPiece = [];
   this.score     = 0;
   this.menu      = 'main';
+  this.sentToDB  = false;
 };
 
 Game.BG_COLOR         = '#FAFAFA';
@@ -161,7 +163,6 @@ Game.prototype.setScore = function () {
   let scoreTag       = document.getElementById('score');
   scoreTag.innerHTML = this.score;
   this.increaseFallRate();
-  firebase.database().push({ name: "whoever", score: this.score });
 };
 
 Game.prototype.increaseFallRate = function () {
@@ -187,6 +188,14 @@ Game.prototype.movePiece = function (delta) {
 Game.prototype.checkForGameOver = function () {
   if (this.board.isOver()) {
     this.menu = 'over';
+    if (!this.sentToDB) {
+      this.sentToDB = true;
+      let myFireBase = new Firebase("https://tetrisjs-9132d.firebaseio.com");
+      myFireBase.set({
+        name : "mark",
+        score : this.score
+      });
+    }
   }
 };
 
