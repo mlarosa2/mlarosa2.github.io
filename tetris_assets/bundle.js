@@ -266,14 +266,62 @@
 	
 	Game.prototype.checkForGameOver = function () {
 	  if (this.board.isOver() && this.score >= this.lowestHighScore()) {
-	    this.menu = 'over';
+	    this.menu = 'hi-score';
 	    this.renderHiScoreModal();
 	  } else if (this.board.isOver()) {
 	    this.menu = 'over';
 	  }
 	};
 	
-	Game.prototype.renderHiScoreModal = function () {};
+	Game.prototype.renderHiScoreModal = function () {
+	  var _this = this;
+	
+	  var dbRefObject = firebase.database().ref();
+	  var allScores = [];
+	
+	  dbRefObject.on("value", function (snapshot) {
+	    var scores = snapshot.val().scores;
+	    for (var score in scores) {
+	      if (scores.hasOwnProperty(score)) {
+	        var initials = Object.keys(scores[score])[0];
+	        allScores.push([initials, scores[score][initials]]);
+	      }
+	    }
+	  });
+	
+	  allScores.pop();
+	
+	  var menu = document.getElementById("enter-score");
+	  var submitHi = document.getElementById("submit");
+	  menu.className = "";
+	  submitHi.addEventListener('click', function (e) {
+	    e.preventDefault();
+	    var initials = document.getElementById("initials");
+	    if (initials.value.length > 3) {
+	      initials = initials.slice(0, 3).toUpperCase();
+	    }
+	    if (_this.score >= allScores[0][1]) {
+	      allScores.unshift([initials, _this.score]);
+	    } else if (_this.score < allScores[1][1]) {
+	      allScores.push([initials, _this.score]);
+	    } else {
+	      var last = allScores.pop();
+	      allScores.push([initials, _this.score]);
+	      allScores.push(last);
+	    }
+	    var nameOne = allScores[0][0];
+	    var nameTwo = allScores[1][0];
+	    var nameThree = allScores[2][0];
+	
+	    firebase.database().ref().child('scores').set();
+	    firebase.database().ref().child('scores').push({ nameOne: allScores[0][1] });
+	    firebase.database().ref().child('scores').push({ nameTwo: allScores[1][1] });
+	    firebase.database().ref().child('scores').push({ nameThree: allScores[2][1] });
+	    submitHi.className = "hide";
+	
+	    _this.board = 'over';
+	  });
+	};
 	
 	Game.prototype.lowestHighScore = function () {
 	  var dbRefObject = firebase.database().ref();

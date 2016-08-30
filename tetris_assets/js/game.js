@@ -193,15 +193,50 @@ Game.prototype.checkForGameOver = function () {
 };
 
 Game.prototype.renderHiScoreModal = function () {
+  const dbRefObject = firebase.database().ref();
+  const allScores = [];
+
+  dbRefObject.on("value", function(snapshot) {
+    let scores = snapshot.val().scores;
+    for (let score in scores) {
+      if (scores.hasOwnProperty(score)) {
+        let initials = Object.keys(scores[score])[0];
+        allScores.push([initials, scores[score][initials]]);
+      }
+    }
+  });
+
+  allScores.pop();
+
   let menu = document.getElementById("enter-score");
   let submitHi = document.getElementById("submit");
   menu.className = "";
-  submitHi.addEventListener('click', function (e) {
+  submitHi.addEventListener('click', (e) => {
     e.preventDefault();
     let initials = document.getElementById("initials");
     if (initials.value.length > 3) {
       initials = initials.slice(0, 3).toUpperCase();
     }
+    if (this.score >= allScores[0][1]) {
+      allScores.unshift([initials, this.score]);
+    } else if (this.score < allScores[1][1]) {
+      allScores.push([initials, this.score]);
+    } else {
+      let last = allScores.pop();
+      allScores.push([initials, this.score]);
+      allScores.push(last);
+    }
+    let nameOne = allScores[0][0];
+    let nameTwo = allScores[1][0];
+    let nameThree = allScores[2][0];
+
+    firebase.database().ref().child('scores').set();
+    firebase.database().ref().child('scores').push({ nameOne : allScores[0][1] });
+    firebase.database().ref().child('scores').push({ nameTwo : allScores[1][1]});
+    firebase.database().ref().child('scores').push({ nameThree : allScores[2][1]});
+    submitHi.className = "hide";
+
+    this.board = 'over';
   });
 };
 
