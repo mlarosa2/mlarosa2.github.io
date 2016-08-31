@@ -28,7 +28,7 @@ GameView.prototype.bindKeyHandlers = function () {
 GameView.prototype.replay = function () {
   if (this.game.menu !== 'over') return;
   this.game.reset(this.ctx);
-};
+}; 
 
 GameView.prototype.start = function () {
   this.bindKeyHandlers();
