@@ -139,6 +139,10 @@ main:after {
   margin-top: 0;
 }
 
+#submit:hover, #submit:focus {
+  text-decoration: none;
+}
+
 #initials {
   font-family: 'Press Start 2P', cursive;
   width: 34px;
