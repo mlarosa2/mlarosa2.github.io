@@ -98,6 +98,8 @@
 	  this.nextPiece = [];
 	  this.score = 0;
 	  this.menu = 'main';
+	  this.setInitials = false;
+	  this.allScores = [];
 	};
 	
 	Game.BG_COLOR = '#FAFAFA';
@@ -265,61 +267,74 @@
 	};
 	
 	Game.prototype.checkForGameOver = function () {
-	  if (this.board.isOver() && this.score >= this.lowestHighScore()) {
-	    this.menu = 'hi-score';
-	    this.renderHiScoreModal();
+	
+	  if (this.board.isOver() && this.score >= this.lowestHighScore() && !this.setInitials) {
+	    this.menu = 'over';
+	    if (this.allScores.length === 0) {
+	      this.setAllScores();
+	      this.renderHiScoreMenu();
+	    }
 	  } else if (this.board.isOver()) {
 	    this.menu = 'over';
 	  }
 	};
 	
-	Game.prototype.renderHiScoreModal = function () {
-	  var _this = this;
-	
+	Game.prototype.setAllScores = function () {
+	  var menu = document.getElementById("enter-score");
 	  var dbRefObject = firebase.database().ref();
-	  var allScores = [];
-	
+	  var thisGame = this;
 	  dbRefObject.on("value", function (snapshot) {
-	    var scores = snapshot.val().scores;
-	    for (var score in scores) {
-	      if (scores.hasOwnProperty(score)) {
-	        var initials = Object.keys(scores[score])[0];
-	        allScores.push([initials, scores[score][initials]]);
+	    if (snapshot.val()) {
+	      var scores = snapshot.val().scores;
+	      for (var score in scores) {
+	        if (scores.hasOwnProperty(score)) {
+	          var initials = Object.keys(scores[score])[0];
+	          thisGame.allScores.push([initials, scores[score][initials]]);
+	        }
 	      }
 	    }
 	  });
 	
-	  allScores.pop();
+	  thisGame.allScores.pop();
+	  menu.className = "";
+	};
+	
+	Game.prototype.renderHiScoreMenu = function () {
+	  var _this = this;
 	
 	  var menu = document.getElementById("enter-score");
 	  var submitHi = document.getElementById("submit");
-	  menu.className = "";
+	  var thisGame = this;
 	  submitHi.addEventListener('click', function (e) {
 	    e.preventDefault();
-	    var initials = document.getElementById("initials");
-	    if (initials.value.length > 3) {
+	    var initials = document.getElementById("initials").value;
+	    if (initials.length > 3) {
 	      initials = initials.slice(0, 3).toUpperCase();
 	    }
-	    if (_this.score >= allScores[0][1]) {
-	      allScores.unshift([initials, _this.score]);
-	    } else if (_this.score < allScores[1][1]) {
-	      allScores.push([initials, _this.score]);
+	    if (thisGame.score >= thisGame.allScores[0][1]) {
+	      thisGame.allScores.unshift([initials, thisGame.score]);
+	    } else if (thisGame.score < _this.allScores[1][1]) {
+	      thisGame.allScores.push([initials, thisGame.score]);
 	    } else {
-	      var last = allScores.pop();
-	      allScores.push([initials, _this.score]);
-	      allScores.push(last);
+	      var last = thisGame.allScores.pop();
+	      thisGame.allScores.push([initials, thisGame.score]);
+	      thisGame.allScores.push(last);
 	    }
-	    var nameOne = allScores[0][0];
-	    var nameTwo = allScores[1][0];
-	    var nameThree = allScores[2][0];
+	    var one = {};
+	    var two = {};
+	    var three = {};
 	
-	    firebase.database().ref().child('scores').set();
-	    firebase.database().ref().child('scores').push({ nameOne: allScores[0][1] });
-	    firebase.database().ref().child('scores').push({ nameTwo: allScores[1][1] });
-	    firebase.database().ref().child('scores').push({ nameThree: allScores[2][1] });
-	    submitHi.className = "hide";
-	
-	    _this.board = 'over';
+	    one[thisGame.allScores[0][0]] = thisGame.allScores[0][1];
+	    two[thisGame.allScores[1][0]] = thisGame.allScores[1][1];
+	    three[thisGame.allScores[2][0]] = thisGame.allScores[2][1];
+	    firebase.database().ref().child('scores').set({});
+	    firebase.database().ref().child('scores').push(one);
+	    firebase.database().ref().child('scores').push(two);
+	    firebase.database().ref().child('scores').push(three);
+	    menu.className = "hide";
+	    thisGame.setInitials = true;
+	    thisGame.menu = 'over';
+	    thisGame.allScores = [];
 	  });
 	};
 	
@@ -327,16 +342,18 @@
 	  var dbRefObject = firebase.database().ref();
 	  var allScores = [];
 	
-	  dbRefObject.on("value", function (snapshot) {
-	    var scores = snapshot.val().scores;
-	    for (var score in scores) {
-	      if (scores.hasOwnProperty(score)) {
-	        var initials = Object.keys(scores[score])[0];
-	        allScores.push(scores[score][initials]);
+	  var low = dbRefObject.on("value", function (snapshot) {
+	    if (snapshot.val()) {
+	      var scores = snapshot.val().scores;
+	      for (var score in scores) {
+	        if (scores.hasOwnProperty(score)) {
+	          var initials = Object.keys(scores[score])[0];
+	          allScores.push(scores[score][initials]);
+	        }
 	      }
 	    }
 	  });
-	
+	  dbRefObject.off("value", low);
 	  return Math.min.apply(Math, allScores);
 	};
 	
@@ -347,6 +364,7 @@
 	  Game.OriginalFallRate = 2;
 	  this.score = 0;
 	  this.nextPiece = [];
+	  this.setInitials = false;
 	  this.setScore();
 	  this.board.reset();
 	};
@@ -1848,19 +1866,21 @@
 	
 	  dbRefObject.on("value", function (snapshot) {
 	    var list = document.getElementById("hi-list");
-	    var scores = snapshot.val().scores;
 	    var scoreLi = "";
-	    for (var score in scores) {
-	      if (scores.hasOwnProperty(score)) {
-	        var initials = Object.keys(scores[score])[0];
-	        scoreLi += "<li>";
-	        scoreLi += initials + ':' + scores[score][initials];
-	        scoreLi += "</li>";
+	    if (snapshot.val()) {
+	      var scores = snapshot.val().scores;
+	      for (var score in scores) {
+	        if (scores.hasOwnProperty(score)) {
+	          var initials = Object.keys(scores[score])[0];
+	          scoreLi += "<li>";
+	          scoreLi += initials + ':' + scores[score][initials];
+	          scoreLi += "</li>";
+	        }
 	      }
 	    }
-	
 	    list.innerHTML = scoreLi;
 	  });
+	
 	  requestAnimationFrame(this.animate.bind(this));
 	};
 	

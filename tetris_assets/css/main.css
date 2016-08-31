@@ -122,3 +122,23 @@ main:after {
   margin-top: 10px;
   padding-left: 10px;
 }
+
+#enter-score {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  text-align: center;
+  z-index: 1;
+  padding: 10px;
+  background: #FAFAFA;
+}
+#enter-score h1 {
+  margin-top: 0;
+}
+
+#initials {
+  font-family: 'Press Start 2P', cursive;
+  width: 34px;
+  padding: 5px;
+}

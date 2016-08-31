@@ -37,19 +37,21 @@ GameView.prototype.start = function () {
 
   dbRefObject.on("value", function(snapshot) {
     let list = document.getElementById("hi-list");
-    let scores = snapshot.val().scores;
     let scoreLi = "";
-    for (let score in scores) {
-      if (scores.hasOwnProperty(score)) {
-        let initials = Object.keys(scores[score])[0];
-        scoreLi += "<li>";
-        scoreLi += `${initials}:${scores[score][initials]}`;
-        scoreLi += "</li>";
+    if (snapshot.val()) {
+      let scores = snapshot.val().scores;
+      for (let score in scores) {
+        if (scores.hasOwnProperty(score)) {
+          let initials = Object.keys(scores[score])[0];
+          scoreLi += "<li>";
+          scoreLi += `${initials}:${scores[score][initials]}`;
+          scoreLi += "</li>";
+        }
       }
     }
-
     list.innerHTML = scoreLi;
   });
+
   requestAnimationFrame(this.animate.bind(this));
 };
 

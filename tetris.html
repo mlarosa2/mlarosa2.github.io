@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="hide" id="enter-score">
-      <h1>Congrats! You got a high score!</h1>
+      <h1>Congrats товaрищ! You got a high score!</h1>
       <p>Please enter your initials below.</p>
       <form>
         <input type="text" id="initials">
@@ -58,6 +58,11 @@
         storageBucket: "",
       };
       firebase.initializeApp(config);
+      //seeds
+      // firebase.database().ref().child('scores').set({});
+      // firebase.database().ref().child('scores').push({"JS": 300});
+      // firebase.database().ref().child('scores').push({"LT": 200});
+      // firebase.database().ref().child('scores').push({"VL": 100});
     </script>
 
     <script type="text/javascript" src="./tetris_assets/js/vendor/keymaster.js"></script>
